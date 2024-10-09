@@ -1,0 +1,34 @@
+<h1>Find your flight</h1>
+
+<%= form_with(url: "/flights", method: :get, local: true) do |f| %>
+  <%= f.label :departure_airport_id, "Departure Airport" %>
+  <%= f.select(:departure_airport_id, @airport_name_option)
+  %>
+  <br>
+  <%= f.label :arrival_airport_id, "Arrival Airport" %>
+  <%= f.select(:arrival_airport_id, @airport_name_option)
+  %>
+  <br>
+  <%= f.label :passengers_num, "Number of passengers" %>
+  <%= f.select(:passenger_num, @passenger_option) %>
+  <br>
+  <%= f.label :departure_date, "Departure date" %>
+  <%= f.select(:departure_date, @flight_date_option) %>
+
+  <%= f.submit "Search Flights" %>
+<% end %>
+
+<% if @flights.empty? %>
+  <p>No flights found.</p>
+<% else %>
+  <%= form_with url: "", method: :get, local: true  do |form| %>
+    <%= form.hidden_field :seats, value: @seats %>
+    <% @flights.each do |flight| %>
+      <%= form.radio_button(:flight, flight.id) %>
+      From <%= flight.departure_airport.name %> to <%= flight.arrival_airport.name %> at <%= flight.departure_date %>
+    <% end %>
+    <br>
+    <br>
+    <%= form.submit "Book Flight" %>
+  <% end %>
+<% end %>
